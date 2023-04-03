@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-using Lx.Benchmark;
-using NUnit.Framework;
+﻿#if DEBUG
+#endif
+
+using System.Collections.Generic;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class ExtensionMethodCall : IBenchmark
+#endif
+    public sealed class ExtensionMethodCall
     {
         private readonly MyClass _instanceOne;
         private readonly MyAnotherClass _instanceTwo;
@@ -25,6 +28,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo.InvokeMethodEx();
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -35,10 +39,13 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
 
-        public string Name {
+        public string Name
+        {
             get { return "Extension Method call"; }
-        }    }
+        }
+    }
 
     public static class Invoker
     {

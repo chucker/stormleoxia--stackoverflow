@@ -23,3 +23,4 @@ VisitorPatternParser/bin
 VisitorPatternParser/obj
 bin/
 obj/
+DynamicUsage/BenchmarkDotNet.Artifacts

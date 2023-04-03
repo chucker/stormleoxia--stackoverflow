@@ -1,13 +1,16 @@
-﻿using System;
+﻿#if DEBUG
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Lx.Benchmark;
-using NUnit.Framework;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class DelegateCall : IBenchmark
+#endif
+    public sealed class DelegateCall
     {
         private readonly MyAnotherClass _instanceTwo;
         private readonly MyClass _instanceOne;
@@ -31,6 +34,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwoCaller.InvokeMethod(_instanceTwo);
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -41,8 +45,10 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
 
-        public string Name {
+        public string Name
+        {
             get { return "MethodInfo.CreateDelegate call"; }
         }
     }
@@ -50,7 +56,7 @@ namespace DynamicUsage.Benchmarks
     internal class DelegateCaller<T>
     {
         private readonly MethodInfo _method;
-        private readonly Delegate _delegate; 
+        private readonly Delegate _delegate;
         private static readonly object[] _emptyParameters = new object[0];
         private Func<T, int> _func;
 
@@ -61,9 +67,9 @@ namespace DynamicUsage.Benchmarks
         /// </summary>
         public DelegateCaller()
         {
-            _method = typeof (T).GetMethod("InvokeMethod");
+            _method = typeof(T).GetMethod("InvokeMethod");
             _delegate = _method.CreateDelegate(typeof(Func<T, int>));
-            _func = (Func<T, int>) _delegate;
+            _func = (Func<T, int>)_delegate;
         }
 
         public int InvokeMethod(T instance)

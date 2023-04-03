@@ -1,14 +1,17 @@
-﻿using System;
+﻿#if DEBUG
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using Lx.Benchmark;
-using NUnit.Framework;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class ExpressionCall : IBenchmark
+#endif
+    public sealed class ExpressionCall
     {
         private readonly MyAnotherClass _instanceTwo;
         private readonly MyClass _instanceOne;
@@ -32,10 +35,12 @@ namespace DynamicUsage.Benchmarks
             _instanceTwoCaller.InvokeMethod(_instanceTwo);
         }
 
-                public string Name {
+        public string Name
+        {
             get { return "Linq Expression call"; }
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -46,12 +51,13 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
     }
 
     internal class ExpressionCaller<T>
     {
         private readonly MethodInfo _method;
-        private readonly Delegate _delegate; 
+        private readonly Delegate _delegate;
         private readonly Func<T, int> _func;
 
         /// <summary>
@@ -59,11 +65,11 @@ namespace DynamicUsage.Benchmarks
         /// </summary>
         public ExpressionCaller()
         {
-            _method = typeof (T).GetMethod("InvokeMethod");
-            var instanceParameter = Expression.Parameter(typeof (T), "instance");
+            _method = typeof(T).GetMethod("InvokeMethod");
+            var instanceParameter = Expression.Parameter(typeof(T), "instance");
             var call = Expression.Call(instanceParameter, _method);
             _delegate = Expression.Lambda<Func<T, int>>(call, instanceParameter).Compile();
-            _func = (Func<T, int>) _delegate;
+            _func = (Func<T, int>)_delegate;
         }
 
         public int InvokeMethod(T instance)

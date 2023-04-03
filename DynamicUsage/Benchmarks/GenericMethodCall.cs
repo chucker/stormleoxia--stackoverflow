@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-using Lx.Benchmark;
-using NUnit.Framework;
+﻿#if DEBUG
+#endif
+
+using System.Collections.Generic;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class GenericMethodCall : IBenchmark
+#endif
+    public sealed class GenericMethodCall
     {
         private readonly MyClass _instanceOne;
         private readonly MyAnotherClass _instanceTwo;
@@ -19,7 +22,8 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo = new MyAnotherClass();
         }
 
-                public string Name {
+        public string Name
+        {
             get { return "Generic Method call"; }
         }
 
@@ -29,6 +33,7 @@ namespace DynamicUsage.Benchmarks
             Caller.Invoke(_instanceTwo);
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -39,11 +44,12 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
     }
 
     public static class Caller
     {
-        public static int Invoke<T>(T instance) where T:IInvoker
+        public static int Invoke<T>(T instance) where T : IInvoker
         {
             return instance.InvokeMethod();
         }

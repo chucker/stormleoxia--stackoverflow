@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-using Lx.Benchmark;
-using NUnit.Framework;
+﻿#if DEBUG
+#endif
+
+using System.Collections.Generic;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class DynamicCall : IBenchmark
+#endif
+    public sealed class DynamicCall
     {
         private readonly dynamic _instanceOne;
         private readonly dynamic _instanceTwo;
@@ -25,6 +28,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo.InvokeMethod();
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -35,6 +39,7 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
 
         public string Name { get { return "Keyword dynamic call"; } }
     }

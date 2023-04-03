@@ -1,15 +1,17 @@
-﻿ using System;
+﻿#if DEBUG
+#endif
+
+using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using Lx.Benchmark;
-using NUnit.Framework;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class DynamicMethodCall : IBenchmark
+#endif
+    public sealed class DynamicMethodCall
     {
         private readonly MyClass _instanceOne;
         private readonly MyAnotherClass _instanceTwo;
@@ -25,7 +27,8 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo = new MyAnotherClass();
         }
 
-        public string Name {
+        public string Name
+        {
             get { return "DynamicMethod.Emit call"; }
         }
 
@@ -35,6 +38,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwoCaller.InvokeMethod(_instanceTwo);
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -45,12 +49,13 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
     }
 
     internal class DynamicMethodCaller<T>
     {
         private readonly MethodInfo _method;
-        private readonly Delegate _delegate; 
+        private readonly Delegate _delegate;
         private readonly Func<T, int> _func;
         private DynamicMethod _dynamicMethod;
 
@@ -59,13 +64,13 @@ namespace DynamicUsage.Benchmarks
         /// </summary>
         public DynamicMethodCaller()
         {
-            _method = typeof (T).GetMethod("InvokeMethod");
-            _dynamicMethod = new DynamicMethod("InvokeMethod", typeof (int), new []{typeof(T)}, GetType().Module);
+            _method = typeof(T).GetMethod("InvokeMethod");
+            _dynamicMethod = new DynamicMethod("InvokeMethod", typeof(int), new[] { typeof(T) }, GetType().Module);
             ILGenerator il = _dynamicMethod.GetILGenerator();
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Call, _method);
             il.Emit(OpCodes.Ret);
-            _func = (Func<T, int>) _dynamicMethod.CreateDelegate(typeof (Func<T, int>));
+            _func = (Func<T, int>)_dynamicMethod.CreateDelegate(typeof(Func<T, int>));
         }
 
         public int InvokeMethod(T instance)

@@ -1,20 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net46;net472;net481;net7.0</TargetFrameworks>
+    <TargetFrameworks>net472;net481;net5.0;net6.0;net7.0</TargetFrameworks>
+    <DependsOnNETStandard>netstandard2.0</DependsOnNETStandard>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit">
-      <Version>2.6.4</Version>
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows">
+      <Version>0.13.5</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+  </ItemGroup>
+
+  <!-- only reference NUnit in debug. BenchmarkDotNet doesn't like it -->
+  <ItemGroup Condition="$(Configuration) == 'Debug'">
+    <PackageReference Include="NUnit">
+      <Version>3.13.3</Version>
+    </PackageReference>	
   </ItemGroup>
 	
   <ItemGroup>
     <Content Include="TextFile1.txt" />
-  </ItemGroup>
-	
-  <ItemGroup>
-    <ProjectReference Include="..\Lx.Benchmark\Lx.Benchmark.csproj" />
   </ItemGroup>
 </Project>

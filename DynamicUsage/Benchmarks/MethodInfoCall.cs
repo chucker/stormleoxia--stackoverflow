@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿#if DEBUG
+#endif
+
+using System.Collections.Generic;
 using System.Reflection;
-using Lx.Benchmark;
-using NUnit.Framework;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class MethodInfoCall : IBenchmark
+#endif
+    public sealed class MethodInfoCall
     {
         private readonly MethodInfoCaller<MyClass> _instanceOneCaller;
         private readonly MyAnotherClass _instanceTwo;
@@ -24,7 +27,8 @@ namespace DynamicUsage.Benchmarks
             _instanceTwoCaller = new MethodInfoCaller<MyAnotherClass>();
         }
 
-                public string Name {
+        public string Name
+        {
             get { return "MethodInfo Invoke call"; }
         }
 
@@ -34,6 +38,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwoCaller.InvokeMethod(_instanceTwo);
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -44,6 +49,7 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
     }
 
     internal class MethodInfoCaller<T>
@@ -56,7 +62,7 @@ namespace DynamicUsage.Benchmarks
         /// </summary>
         public MethodInfoCaller()
         {
-            _method = typeof (T).GetMethod("InvokeMethod");
+            _method = typeof(T).GetMethod("InvokeMethod");
         }
 
         public int InvokeMethod(T instance)

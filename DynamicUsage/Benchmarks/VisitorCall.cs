@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
-using Lx.Benchmark;
-using NUnit.Framework;
+﻿#if DEBUG
+#endif
+
+using System.Collections.Generic;
 
 namespace DynamicUsage.Benchmarks
 {
+#if DEBUG
     [TestFixture]
-    public sealed class VisitorCall : IBenchmark
+#endif
+    public sealed class VisitorCall
     {
         private readonly MyClass _instanceOne;
         private readonly MyAnotherClass _instanceTwo;
@@ -21,7 +24,8 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo = new MyAnotherClass();
         }
 
-                public string Name {
+        public string Name
+        {
             get { return "Visitor Accept/Visit call"; }
         }
 
@@ -31,6 +35,7 @@ namespace DynamicUsage.Benchmarks
             _instanceTwo.Accept(_visitor);
         }
 
+#if DEBUG
         [Test]
         public void VerifyAssertions()
         {
@@ -41,6 +46,7 @@ namespace DynamicUsage.Benchmarks
             Assert.IsTrue(list.Contains(1));
             Assert.IsTrue(list.Contains(2));
         }
+#endif
     }
 
 
@@ -51,7 +57,7 @@ namespace DynamicUsage.Benchmarks
         {
             return c.InvokeMethod();
         }
-        
+
         public int Visit(MyClass c)
         {
             return c.InvokeMethod();
